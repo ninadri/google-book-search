@@ -3,9 +3,12 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    getSingleUser: async (_, { id, username }) => {
+    getSingleUser: async (parent, { user = null, params }) => {
       const foundUser = await User.findOne({
-        $or: [{ _id: id }, { username: username }],
+        $or: [
+          { _id: user ? user._id : params.id },
+          { username: params.username },
+        ],
       });
 
       if (!foundUser) {
@@ -16,8 +19,8 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (_, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
+    createUser: async (parent, { body }) => {
+      const user = await User.create({ body });
 
       if (!user) {
         throw new Error("Something is wrong!");
@@ -26,16 +29,16 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    login: async (_, { username, email, password }) => {
+    login: async (parent, { body }) => {
       const user = await User.findOne({
-        $or: [{ username: username }, { email: email }],
+        $or: [{ username: body.username }, { email: body.email }],
       });
 
       if (!user) {
         throw new Error("Can't find this user");
       }
 
-      const correctPw = await user.isCorrectPassword(password);
+      const correctPw = await user.isCorrectPassword(body.password);
 
       if (!correctPw) {
         throw new Error("Wrong password!");
@@ -44,7 +47,7 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (_, { bookInput }, { user }) => {
+    saveBook: async (parent, { user, body }) => {
       if (!user) {
         throw new Error("You need to be logged in!");
       }
@@ -52,7 +55,7 @@ const resolvers = {
       try {
         const updatedUser = await User.findOneAndUpdate(
           { _id: user._id },
-          { $addToSet: { savedBooks: bookInput } },
+          { $addToSet: { savedBooks: body } },
           { new: true, runValidators: true }
         );
 
@@ -61,14 +64,14 @@ const resolvers = {
         throw new Error("Error saving book!");
       }
     },
-    deleteBook: async (_, { bookId }, { user }) => {
+    deleteBook: async (parent, { user, params }) => {
       if (!user) {
         throw new Error("You need to be logged in!");
       }
 
       const updatedUser = await User.findOneAndUpdate(
         { _id: user._id },
-        { $pull: { savedBooks: { bookId } } },
+        { $pull: { savedBooks: { bookId: params.bookId } } },
         { new: true }
       );
 
