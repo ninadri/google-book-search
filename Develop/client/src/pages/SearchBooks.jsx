@@ -119,6 +119,10 @@ const SearchBooks = () => {
                       src={book.image}
                       alt={`The cover for ${book.title}`}
                       variant="top"
+                      style={{
+                        height: "250px",
+                        objectFit: "contain",
+                      }}
                     />
                   ) : null}
                   <Card.Body>
