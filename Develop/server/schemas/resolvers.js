@@ -19,8 +19,8 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (parent, { body }) => {
-      const user = await User.create({ body });
+    createUser: async (parent, args) => {
+      const user = await User.create(args);
 
       if (!user) {
         throw new Error("Something is wrong!");
@@ -29,16 +29,16 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    login: async (parent, { body }) => {
+    login: async (parent, { email, password }) => {
       const user = await User.findOne({
-        $or: [{ username: body.username }, { email: body.email }],
+        email,
       });
 
       if (!user) {
         throw new Error("Can't find this user");
       }
 
-      const correctPw = await user.isCorrectPassword(body.password);
+      const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
         throw new Error("Wrong password!");
