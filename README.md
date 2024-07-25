@@ -44,9 +44,9 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
 ## Mock-Up
 
-As you can see in the following animation, a user can type a search term (in this case, "harry potter") in a search box and the results appear:
+As you can see in the following image, a user can type a search term (in this case, "twilight") in a search box and the results appear:
 
-![Animation shows "star wars" typed into a search box and books about Star Wars appearing as results.](./Assets/21-mern-homework-demo-01.gif)
+![Image shows "twilight" typed into a search box and books about Star Wars appearing as results.](./Develop/assets/twilight.png)
 
 The user can save books by clicking "Save This Book!" under each search result, as shown in the following animation:
 
