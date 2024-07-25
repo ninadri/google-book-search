@@ -7,7 +7,7 @@ const resolvers = {
       if (context.user) {
         return User.findOne({ _id: context.user._id });
       }
-      throw new AuthenticationError("You need to be logged in");
+      throw AuthenticationError("You need to be logged in");
     },
   },
   Mutation: {
@@ -15,7 +15,7 @@ const resolvers = {
       const user = await User.create(args);
 
       if (!user) {
-        throw new AuthenticationError("Something is wrong!");
+        throw AuthenticationError("Something is wrong!");
       }
 
       const token = signToken(user);
@@ -27,39 +27,50 @@ const resolvers = {
       });
 
       if (!user) {
-        throw new AuthenticationError("Can't find this user");
+        throw AuthenticationError("Can't find this user");
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError("Wrong password!");
+        throw AuthenticationError("Wrong password!");
       }
 
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { bookData }, context) => {
-      if (!context.user) {
+    savedBooks: async (parent, { bookInput }, context) => {
+      if (context.user) {
         const user = await User.findByIdAndUpdate(
-          context.user._id,
-          { $addToSet: { savedBooks: bookData } },
+          { _id: context.user._id },
+          { $push: { savedBooks: bookInput } },
           { new: true }
         );
 
         return user;
       }
-      throw new AuthenticationError("You need to be logged in");
+      throw AuthenticationError("You need to be logged in");
     },
-    deleteBook: async (parent, { bookId }, contextç) => {
+    deleteBook: async (parent, { bookId }, context) => {
       if (context.user) {
-        return User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $pull: { savedBooks: { bookId } } },
-          { new: true }
-        );
+        try {
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: context.user._id },
+            { $pull: { savedBooks: { bookId: bookId } } },
+            { new: true }
+          );
+
+          if (!updatedUser) {
+            throw new Error("Failed to delete the book");
+          }
+
+          return updatedUser;
+        } catch (err) {
+          throw new Error("Failed to delete the book");
+        }
       }
-      throw new AuthenticationError("Couldn't find user with this id!");
+
+      throw new AuthenticationError("You need to be logged in");
     },
   },
 };
