@@ -46,17 +46,57 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
 As you can see in the following image, a user can type a search term (in this case, "twilight") in a search box and the results appear:
 
-![Image shows "twilight" typed into a search box and books about Star Wars appearing as results.](./Develop/assets/twilight.png)
+![Image shows "twilight" typed into a search box and books about Star Wars appearing as results.](./assets/twilight.png)
 
-The user can save books by clicking "Save This Book!" under each search result, as shown in the following animation:
+The user can save books by clicking "Save This Book!" under each search result, as shown in the following image:
 
-![Animation shows user clicking "Save This Book!" button to save books that appear in search results. The button label changes to "Book Already Saved" after it is clicked and the book is saved.](./Assets/21-mern-homework-demo-02.gif)
+![Image shows user clicking "Save This Book!" button to save books that appear in search results. The button label changes to "This book has already been saved" after it is clicked and the book is saved.](./assets/savebook.png)
 
-A user can view their saved books on a separate page, as shown in the following animation:
+A user can view their saved books on a separate page, as shown in the following image:
 
-![The Viewing Lernantino's Books page shows the books that the user Lernaninto has saved.](./Assets/21-mern-homework-demo-03.gif)
+![Image shows the books that the user has saved.](./assets/seebooks.png)
 
-## Getting Started
+A user can delete their saved books by clicking "Delete this Book!", and the following will appear:
+
+![Image shows the books that the user deleted a book.](./assets/deletedbook.png)
+
+## Installation
+
+First clone the repository:
+
+```
+git clone https://github.com/ninadri/google-book-search.git
+```
+
+Then install the packages in each the client folder, server folder and the main by using the following:
+
+```
+npm i
+```
+
+In the server folder, run the apollo server by using the following:
+
+```
+node server.js
+```
+
+In the client server, run the following:
+
+```
+npm run build
+```
+
+In the main folder, run the following:
+
+```
+npm run develop
+```
+
+This will run the application.
+
+## License
+
+MIT License
 
 ---
 
